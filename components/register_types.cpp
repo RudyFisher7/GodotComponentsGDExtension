@@ -2,9 +2,9 @@
 
 #include "register_types.h"
 
-#include "components/component.h"
-#include "component_container/component_container.h"
-#include "nodes/component_manager.h"
+#include "core/component.h"
+#include "core/component_container.h"
+#include "core/component_manager.h"
 #include "components/gdextension_component.h"
 
 #include <gdextension_interface.h>

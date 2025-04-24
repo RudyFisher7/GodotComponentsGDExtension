@@ -8,7 +8,7 @@
 #include <windows.h>
 #endif
 
-#include "component.h"
+#include "core/component.h"
 
 #include <godot_cpp/classes/object.hpp>
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "component_container/component_container.h"
-#include "components/component.h"
+#include "component_container.h"
+#include "component.h"
 #include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/classes/object.hpp>
 #include <godot_cpp/classes/node.hpp>
@@ -11,7 +11,7 @@ class ComponentManager : public Node {
 
 protected:
     Node *_parent = nullptr;
-    Ref<ComponentContainer> _manager;
+    Ref<ComponentContainer> _components;
 
 public:
     ComponentManager() = default;

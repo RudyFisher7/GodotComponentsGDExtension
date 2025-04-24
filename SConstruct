@@ -6,10 +6,9 @@ env = SConscript("C:/dev/godot_cpp/SConstruct")
 
 env.Append(CPPPATH=["components/"])
 sources = Glob("components/*.cpp")
-sources.extend(Glob("components/component_container/*.cpp"))
+sources.extend(Glob("components/core/*.cpp"))
 sources.extend(Glob("components/components/*.cpp"))
 sources.extend(Glob("components/editor/*.cpp"))
-sources.extend(Glob("components/nodes/*.cpp"))
 
 if env["target"] in ["editor", "template_debug"]:
     try:
