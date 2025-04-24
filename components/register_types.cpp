@@ -4,7 +4,7 @@
 
 #include "core/component.h"
 #include "core/component_container.h"
-#include "core/component_manager.h"
+#include "core/component_runtime_manager.h"
 #include "components/gdextension_component.h"
 
 #include <gdextension_interface.h>
@@ -19,10 +19,10 @@ void initialize_components_types(ModuleInitializationLevel p_level) {
         return;
     }
 
+    GDREGISTER_RUNTIME_CLASS(ComponentRuntimeManager);
     ClassDB::register_class<Component>();
     ClassDB::register_class<GDExtensionComponent>();
     ClassDB::register_class<ComponentContainer>();
-    ClassDB::register_class<ComponentManager>();
 }
 
 void uninitialize_components_types(ModuleInitializationLevel p_level) {

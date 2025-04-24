@@ -15,7 +15,7 @@ StringName Component::get_component_class() {
         }
     }
 
-    return get_class();//FIXME:: gdextension doesn't expose get_class_name() yet
+    return get_class();//FIXME:: gdextension doesn't expose get_class_name() yet, but I'm guessing this is less efficient
 }
 
 void Component::enter_tree() {
