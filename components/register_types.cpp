@@ -2,7 +2,10 @@
 
 #include "register_types.h"
 
-#include "gdextension_component.h"
+#include "components/component.h"
+#include "component_container/component_container.h"
+#include "nodes/component_manager.h"
+#include "components/gdextension_component.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/class_db.hpp>
@@ -16,7 +19,10 @@ void initialize_components_types(ModuleInitializationLevel p_level) {
         return;
     }
 
+    ClassDB::register_class<Component>();
     ClassDB::register_class<GDExtensionComponent>();
+    ClassDB::register_class<ComponentContainer>();
+    ClassDB::register_class<ComponentManager>();
 }
 
 void uninitialize_components_types(ModuleInitializationLevel p_level) {
