@@ -5,19 +5,35 @@
 #include "component_runtime_manager.h"
 
 #include <godot_cpp/classes/viewport.hpp>
+#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/core/error_macros.hpp>
 
+ComponentRuntimeManager::~ComponentRuntimeManager() {
+    if (_components.is_valid()) {
+        _components->owner = nullptr;
+    }
+}
 
 void ComponentRuntimeManager::_enter_tree() {
     _parent = get_parent();
-    ERR_FAIL_COND_MSG(_parent == nullptr, vformat("%s needs a parent Node in the scene tree.", get_path()));
+    if(_parent == nullptr) {
+        _components = (Ref<ComponentContainer>)memnew(ComponentContainer);
+    }
+
+    ERR_FAIL_COND_MSG(_parent == nullptr, vformat("%s needs a parent Node in the scene tree.", get_name()));
 
     _components = ComponentContainer::get_components(_parent);
+    if (_components.is_valid() && _components->owner != nullptr) {
+        ERR_PRINT(vformat("%s's components are already being managed by another ComponentRuntimeManager.", _parent->get_name()));
+        _components = (Ref<ComponentContainer>)nullptr;
+    }
+
     if (_components.is_valid()) {
+        _components->owner = this;
         _components->connect("changed", callable_mp(this, &ComponentRuntimeManager::_update_processing));
         _components->call_components_enter_tree();
     } else {
-        WARN_PRINT(vformat("%s's parent Node has no components to manage.", get_path()));
+        WARN_PRINT(vformat("%s's parent Node has no components to manage.", get_name()));
 
         // just add a dummy to avoid crashes if user decides to call any set_process_*() methods.
         // I'd rather do this than have another check inside _process(), etc.
@@ -26,6 +42,8 @@ void ComponentRuntimeManager::_enter_tree() {
 }
 
 void ComponentRuntimeManager::_exit_tree() {
+    _parent = nullptr;
+    _components->owner = nullptr;
     _components->disconnect("changed", callable_mp(this, &ComponentRuntimeManager::_update_processing));
     _components->call_components_exit_tree();
 }
@@ -67,7 +85,9 @@ void ComponentRuntimeManager::_unhandled_key_input(const Ref<InputEvent> &p_even
     }
 }
 
-void ComponentRuntimeManager::_bind_methods() {}
+void ComponentRuntimeManager::_bind_methods() {
+
+}
 
 void ComponentRuntimeManager::_update_processing() {
     set_process(_components->is_processing());

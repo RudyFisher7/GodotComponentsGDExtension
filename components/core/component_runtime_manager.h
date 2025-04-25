@@ -15,6 +15,7 @@ protected:
 
 public:
     ComponentRuntimeManager() = default;
+    virtual ~ComponentRuntimeManager() override;
 
     void _enter_tree() override;
     void _exit_tree() override;
