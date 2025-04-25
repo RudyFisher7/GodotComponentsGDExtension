@@ -16,7 +16,8 @@ class GDExtensionComponent : public Component {
     GDCLASS(GDExtensionComponent, Component);
 
 public:
-    void _enter_tree();
+    void enter_tree() override;
+    void ready() override;
 
 protected:
     static void _bind_methods();

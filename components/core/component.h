@@ -21,7 +21,7 @@ class Component : public Resource {
     GDCLASS(Component, Resource);
 
 public:
-    Object *owner = nullptr;
+    Object *owner = nullptr;//todo:: add owner to container too
 
 public:
     Component() = default;
@@ -29,24 +29,27 @@ public:
 
     StringName get_component_class();
 
-    void enter_tree();
-    void exit_tree();
-    void ready();
-    void process(double delta);
-    void physics_process(double delta);
+    // note:: gdextension's GDVIRTUAL_BIND macro doesn't allow native classes to
+    // override them, only GDScript. if this is changed to mirror Godot's behavior, then
+    // replace these overridden virtuals with the GDVIRTUAL_BIND functions.
+    virtual void enter_tree();
+    virtual void exit_tree();
+    virtual void ready();
+    virtual void process(double delta);
+    virtual void physics_process(double delta);
 
-    bool input(const Ref<InputEvent> &p_event);
-    bool shortcut_input(const Ref<InputEvent> &p_key_event);
-    bool unhandled_input(const Ref<InputEvent> &p_event);
-    bool unhandled_key_input(const Ref<InputEvent> &p_key_event);
+    virtual bool input(const Ref<InputEvent> &p_event);
+    virtual bool shortcut_input(const Ref<InputEvent> &p_key_event);
+    virtual bool unhandled_input(const Ref<InputEvent> &p_event);
+    virtual bool unhandled_key_input(const Ref<InputEvent> &p_key_event);
 
-    bool is_process_overridden() const;
-    bool is_physics_process_overridden() const;
+    virtual bool is_process_overridden() const;
+    virtual bool is_physics_process_overridden() const;
 
-    bool is_input_overridden() const;
-    bool is_shortcut_input_overridden() const;
-    bool is_unhandled_input_overridden() const;
-    bool is_unhandled_key_input_overridden() const;
+    virtual bool is_input_overridden() const;
+    virtual bool is_shortcut_input_overridden() const;
+    virtual bool is_unhandled_input_overridden() const;
+    virtual bool is_unhandled_key_input_overridden() const;
 
 protected:
     static void _bind_methods();

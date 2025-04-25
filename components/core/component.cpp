@@ -31,6 +31,7 @@ void Component::exit_tree() {
 }
 
 void Component::ready() {
+    print_line("_ready ", get_component_class());
     if (GDVIRTUAL_CALL(_ready)) {
         //
     }

@@ -8,6 +8,10 @@ void GDExtensionComponent::_bind_methods() {
     //
 }
 
-void GDExtensionComponent::_enter_tree() {
-    print_line("hello from gdextension!");
+void GDExtensionComponent::enter_tree() {
+    print_line("_enter_tree gdextension!");
+}
+
+void GDExtensionComponent::ready() {
+    print_line("_ready gdextension!");
 }

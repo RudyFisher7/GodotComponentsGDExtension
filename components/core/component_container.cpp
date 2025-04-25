@@ -3,6 +3,16 @@
 //
 
 #include "component_container.h"
+#include <godot_cpp/core/print_string.hpp>
+
+Ref<ComponentContainer> ComponentContainer::get_components(Object *obj) {
+    if (!obj->has_meta(StringName("components"))) {
+        return nullptr;
+    }
+
+    Variant variant = obj->get_meta(StringName("components"));
+    return (Ref<ComponentContainer>) Object::cast_to<ComponentContainer>(variant); // use c-cast to disambiguate
+}
 
 bool ComponentContainer::has_component(StringName component_class) const {
     return _components.has(component_class);
@@ -52,6 +62,8 @@ void ComponentContainer::set_component(Ref<Component> value) {
     if (value->is_unhandled_key_input_overridden()) {
         (void)_unhandled_key_input_group.insert(value);
     }
+
+    print_line("Added ", value->get_component_class());
 
     emit_changed();
 }
@@ -111,6 +123,7 @@ void ComponentContainer::call_components_exit_tree() {
 }
 
 void ComponentContainer::call_components_ready() {
+    print_line("call_components_ready");
     for (const KeyValue<StringName, Ref<Component>> &K : _components) {
         K.value->ready();
     }

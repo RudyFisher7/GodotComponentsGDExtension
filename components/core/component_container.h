@@ -14,9 +14,6 @@ using namespace godot;
 class ComponentContainer : public Resource {
     GDCLASS(ComponentContainer, Resource)
 
-public:
-    static Ref<ComponentContainer> get_container(Object obj);
-
 protected:
     HashMap<StringName, Ref<Component>> _components;
     HashSet<Ref<Component>> _process_group;
@@ -27,6 +24,8 @@ protected:
     HashSet<Ref<Component>> _unhandled_key_input_group;
 
 public:
+    static Ref<ComponentContainer> get_components(Object *obj);
+
     ComponentContainer() = default;
     virtual ~ComponentContainer() = default;
 

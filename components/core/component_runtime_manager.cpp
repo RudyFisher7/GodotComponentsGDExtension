@@ -11,35 +11,28 @@
 void ComponentRuntimeManager::_enter_tree() {
     _parent = get_parent();
     ERR_FAIL_COND_MSG(_parent == nullptr, vformat("%s needs a parent Node in the scene tree.", get_path()));
-    if (!_parent->has_meta(StringName("components"))) {
+
+    _components = ComponentContainer::get_components(_parent);
+    if (_components.is_valid()) {
+        _components->connect("changed", callable_mp(this, &ComponentRuntimeManager::_update_processing));
+        _components->call_components_enter_tree();
+    } else {
         WARN_PRINT(vformat("%s's parent Node has no components to manage.", get_path()));
 
         // just add a dummy to avoid crashes if user decides to call any set_process_*() methods.
         // I'd rather do this than have another check inside _process(), etc.
         _components = (Ref<ComponentContainer>)memnew(ComponentContainer);
-    } else {
-        Variant variant = _parent->get_meta(StringName("components"));
-        _components = (Ref<ComponentContainer>) Object::cast_to<ComponentContainer>(variant); // use c-cast to disambiguate
-
-        _components->connect("changed", callable_mp(this, &ComponentRuntimeManager::_update_processing));
-        _components->call_components_enter_tree();
     }
 }
 
 void ComponentRuntimeManager::_exit_tree() {
-    if (_components.is_valid()) {
-        _components->disconnect("changed", callable_mp(this, &ComponentRuntimeManager::_update_processing));
-        _components->call_components_exit_tree();
-    }
+    _components->disconnect("changed", callable_mp(this, &ComponentRuntimeManager::_update_processing));
+    _components->call_components_exit_tree();
 }
 
 void ComponentRuntimeManager::_ready() {
-    if (_components.is_valid()) {
-        _update_processing();
-        _components->call_components_ready();
-    } else {
-        _set_processing(false);
-    }
+    _update_processing();
+    _components->call_components_ready();
 }
 
 void ComponentRuntimeManager::_process(double p_delta) {
