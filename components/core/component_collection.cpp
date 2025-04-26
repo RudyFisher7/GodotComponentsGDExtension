@@ -41,6 +41,10 @@ Ref<ComponentCollection> ComponentCollection::get_components(Object *obj) {
     return (Ref<ComponentCollection>) Object::cast_to<ComponentCollection>(variant); // use c-cast to disambiguate
 }
 
+ComponentCollection::ComponentCollection() {
+    set_local_to_scene(true);
+}
+
 ComponentCollection::~ComponentCollection() {
     for (const KeyValue<StringName, Ref<Component>> &K : _components) {
         K.value->owner = nullptr;

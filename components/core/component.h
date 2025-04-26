@@ -24,7 +24,7 @@ public:
     Object *owner = nullptr;//todo:: add owner to container too
 
 public:
-    Component() = default;
+    Component();
     ~Component() override = default;
 
     StringName get_component_class();

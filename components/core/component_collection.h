@@ -33,7 +33,7 @@ public:
     static void remove_components(Object *obj);
     static Ref<ComponentCollection> get_components(Object *obj);
 
-    ComponentCollection() = default;
+    ComponentCollection();
     virtual ~ComponentCollection();
 
 //    TypedDictionary<StringName, Component> get_component_dictionary() const;

@@ -4,6 +4,9 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/script.hpp>
 
+Component::Component() {
+    set_local_to_scene(true);
+}
 
 StringName Component::get_component_class() {
     Ref<Script> s = get_script();

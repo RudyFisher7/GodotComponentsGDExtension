@@ -1,9 +1,5 @@
-@icon("res://icon.svg")
-class_name GDComponent
+#class_name Component
 extends Resource
-
-
-@export var my_int: int = 0
 
 
 func _enter_tree() -> void:
@@ -26,17 +22,17 @@ func _physics_process(delta: float) -> void:
 	pass
 
 
-func _input(event: InputEvent, viewport: Viewport) -> void:
-	pass
+func _input(event: InputEvent) -> bool:
+	return false
 
 
-func _unhandled_input(event: InputEvent, viewport: Viewport) -> void:
-	pass
+func _unhandled_input(event: InputEvent) -> bool:
+	return false
 
 
-func _unhandled_key_input(event: InputEvent, viewport: Viewport) -> void:
-	pass
+func _unhandled_key_input(event: InputEvent) -> bool:
+	return false
 
 
-func _shortcut_input(event: InputEvent, viewport: Viewport) -> void:
-	pass
+func _shortcut_input(event: InputEvent) -> bool:
+	return false
