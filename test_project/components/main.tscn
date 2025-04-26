@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://c7p4j5a1gvkjw"]
+
+[sub_resource type="GDScript" id="GDScript_ig7tw"]
+script/source = "extends Node
+
+
+func _ready() -> void:
+	var component := get_component(&\"GDScriptComponent\") as Component
+	if component:
+		pass#do stuff
+	
+	if $Node.has_component(component.get_component_class()):
+		pass#do stuff on this node
+	
+	remove_component(component.get_component_class())
+	$Node.set_component(component)
+	
+"
+
+[node name="Main" type="Node"]
+script = SubResource("GDScript_ig7tw")
+
+[node name="Node" type="Node" parent="."]

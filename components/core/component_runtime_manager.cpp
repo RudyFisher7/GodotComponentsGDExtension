@@ -17,15 +17,15 @@ ComponentRuntimeManager::~ComponentRuntimeManager() {
 void ComponentRuntimeManager::_enter_tree() {
     _parent = get_parent();
     if(_parent == nullptr) {
-        _components = (Ref<ComponentContainer>)memnew(ComponentContainer);
+        _components = (Ref<ComponentCollection>)memnew(ComponentCollection);
     }
 
     ERR_FAIL_COND_MSG(_parent == nullptr, vformat("%s needs a parent Node in the scene tree.", get_name()));
 
-    _components = ComponentContainer::get_components(_parent);
+    _components = ComponentCollection::get_components(_parent);
     if (_components.is_valid() && _components->owner != nullptr) {
         ERR_PRINT(vformat("%s's components are already being managed by another ComponentRuntimeManager.", _parent->get_name()));
-        _components = (Ref<ComponentContainer>)nullptr;
+        _components = (Ref<ComponentCollection>)nullptr;
     }
 
     if (_components.is_valid()) {
@@ -37,7 +37,7 @@ void ComponentRuntimeManager::_enter_tree() {
 
         // just add a dummy to avoid crashes if user decides to call any set_process_*() methods.
         // I'd rather do this than have another check inside _process(), etc.
-        _components = (Ref<ComponentContainer>)memnew(ComponentContainer);
+        _components = (Ref<ComponentCollection>)memnew(ComponentCollection);
     }
 }
 

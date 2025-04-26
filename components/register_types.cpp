@@ -3,7 +3,7 @@
 #include "register_types.h"
 
 #include "core/component.h"
-#include "core/component_container.h"
+#include "core/component_collection.h"
 #include "core/component_runtime_manager.h"
 #include "components/gdextension_component.h"
 
@@ -22,7 +22,7 @@ void initialize_components_types(ModuleInitializationLevel p_level) {
     GDREGISTER_RUNTIME_CLASS(ComponentRuntimeManager);
     ClassDB::register_class<Component>();
     ClassDB::register_class<GDExtensionComponent>();
-    ClassDB::register_class<ComponentContainer>();
+    ClassDB::register_class<ComponentCollection>();
 }
 
 void uninitialize_components_types(ModuleInitializationLevel p_level) {

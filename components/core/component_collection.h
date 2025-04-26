@@ -11,15 +11,15 @@
 
 using namespace godot;
 
-class ComponentContainer : public Resource {
-    GDCLASS(ComponentContainer, Resource)
+class ComponentCollection : public Resource {
+    GDCLASS(ComponentCollection, Resource)
 
 public:
     Object *owner = nullptr;
 
 protected:
-    TypedDictionary<StringName, Component> _components;
-//    HashMap<StringName, Ref<Component>> _components;
+//    TypedDictionary<StringName, Component> _components;
+    HashMap<StringName, Ref<Component>> _components;
     HashSet<Ref<Component>> _process_group;
     HashSet<Ref<Component>> _physics_process_group;
     HashSet<Ref<Component>> _input_group;
@@ -29,16 +29,18 @@ protected:
 
 public:
     static bool has_components(Object *obj);
-    static void set_components(Object *obj, const Ref<ComponentContainer> &components);
-    static Ref<ComponentContainer> get_components(Object *obj);
+    static void set_components(Object *obj, const Ref<ComponentCollection> &components);
+    static void remove_components(Object *obj);
+    static Ref<ComponentCollection> get_components(Object *obj);
 
-    ComponentContainer() = default;
-    virtual ~ComponentContainer() = default;
+    ComponentCollection() = default;
+    virtual ~ComponentCollection();
 
-    TypedDictionary<StringName, Component> get_component_dictionary() const;
-    void set_component_dictionary(TypedDictionary<StringName, Component> value);
+//    TypedDictionary<StringName, Component> get_component_dictionary() const;
+//    void set_component_dictionary(TypedDictionary<StringName, Component> value);
 
     bool is_runtime_managed() const;
+    bool is_empty() const;
     bool has_component(const StringName& component_class) const;
     Ref<Component> get_component(const StringName& component_class) const;
     virtual void set_component(const Ref<Component> &value);
@@ -66,9 +68,9 @@ public:
 
 protected:
     static void _bind_methods();
-//    void _get_property_list(List<PropertyInfo> *out) const;
-//    bool _get(const StringName &p_property, Variant &r_value) const;
-//    bool _set(const StringName &p_property, const Variant &p_value);
+    void _get_property_list(List<PropertyInfo> *out) const;
+    bool _get(const StringName &p_property, Variant &r_value) const;
+    bool _set(const StringName &p_property, const Variant &p_value);
 
     bool _remove_component(StringName component_class);
 };
