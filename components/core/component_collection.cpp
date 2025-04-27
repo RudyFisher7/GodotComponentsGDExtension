@@ -84,12 +84,12 @@ Ref<Component> ComponentCollection::get_component(const StringName& component_cl
 }
 
 void ComponentCollection::set_component(const Ref<Component> &value) {
-    ERR_FAIL_COND_MSG(value->owner != nullptr, vformat("This component already has an owner. Remove it first."));
+    ERR_FAIL_COND_MSG((value->owner != nullptr && value->owner != this), vformat("This component of type %s already has an owner. Remove it first.", value->get_component_class()));
     ERR_FAIL_COND_MSG(!value.is_valid(), vformat("Can't add a null component."));
 
     (void)_remove_component(value->get_component_class());
 
-    _components[value->get_component_class()] = value;
+    _components.insert(value->get_component_class(), value);
     value->owner = Object::cast_to<Object>(this);
 
     if (value->is_process_overridden()) {

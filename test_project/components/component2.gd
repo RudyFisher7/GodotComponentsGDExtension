@@ -1,1 +1,1 @@
-extends GDScriptComponent
+extends TestGDScriptComponent

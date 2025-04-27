@@ -5,7 +5,7 @@ var _object: Node = null
 
 
 func _can_handle(object: Object) -> bool:
-	return not object is Component and not object is ComponentCollection
+	return object is Node
 
 
 func _parse_end(object: Object) -> void:
@@ -61,17 +61,17 @@ func _on_add_remove_runtime_button_pressed() -> void:
 	if not _object:
 		return
 	
-	if not ComponentCollection.has_components(_object):
-		var toaster := EditorInterface.get_editor_toaster() as EditorToaster
-		var warning_message: String = "(Editor Inspector) %s has no components. Add one first." % _object.name
-		toaster.push_toast(warning_message, EditorToaster.SEVERITY_ERROR)
-		printerr(warning_message)
-		return
 	
 	if _object.has_node(^"./ComponentRuntimeManager"):
 		print("remove ComponentRuntimeManager")
 		_object.remove_child(_object.get_node(^"./ComponentRuntimeManager"))
 	else:
+		if not ComponentCollection.has_components(_object):
+			var toaster := EditorInterface.get_editor_toaster() as EditorToaster
+			var warning_message: String = "(Editor Inspector) %s has no components. Add one first." % _object.name
+			toaster.push_toast(warning_message, EditorToaster.SEVERITY_ERROR)
+			printerr(warning_message)
+			return
 		print("add ComponentRuntimeManager")
 		var child := ComponentRuntimeManager.new()
 		_object.add_child(child, true, Node.INTERNAL_MODE_DISABLED)

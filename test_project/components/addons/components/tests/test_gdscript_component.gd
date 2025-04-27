@@ -1,9 +1,9 @@
-class_name GDScriptComponent
+class_name TestGDScriptComponent
 extends Component
 
 
-@export var _tmp_0: int = 0
-@export var _tmp_1: Component = null
+@export var tmp_0: int = 0
+@export var tmp_name: String = "temp"
 
 
 func _enter_tree() -> void:

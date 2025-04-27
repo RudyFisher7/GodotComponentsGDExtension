@@ -46,6 +46,7 @@ void ComponentRuntimeManager::_exit_tree() {
     _components->owner = nullptr;
     _components->disconnect("changed", callable_mp(this, &ComponentRuntimeManager::_update_processing));
     _components->call_components_exit_tree();
+    _components = (Ref<ComponentCollection>)nullptr;
 }
 
 void ComponentRuntimeManager::_ready() {
