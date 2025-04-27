@@ -41,6 +41,44 @@ Ref<ComponentCollection> ComponentCollection::get_components(Object *obj) {
     return (Ref<ComponentCollection>) Object::cast_to<ComponentCollection>(variant); // use c-cast to disambiguate
 }
 
+bool ComponentCollection::object_has_component(Object *obj, const StringName &component_class) {
+    Ref<ComponentCollection> collection = get_components(obj);
+
+    if (collection.is_valid()) {
+        return collection->has_component(component_class);
+    }
+
+    return false;
+}
+
+void ComponentCollection::object_set_component(Object *obj, const Ref<Component> &component) {
+    Ref<ComponentCollection> collection = get_components(obj);
+    if (collection.is_null()) {
+        collection = (Ref<ComponentCollection>)memnew(ComponentCollection);
+        set_components(obj, collection);
+    }
+
+    collection->set_component(component);
+}
+
+void ComponentCollection::object_remove_component(Object *obj, const StringName &component_class) {
+    Ref<ComponentCollection> collection = get_components(obj);
+
+    if (collection.is_valid()) {
+        collection->remove_component(component_class);
+    }
+}
+
+Ref<ComponentCollection> ComponentCollection::object_get_component(Object *obj, const StringName &component_class) {
+    Ref<ComponentCollection> collection = get_components(obj);
+
+    if (collection.is_valid()) {
+        return collection->get_component(component_class);
+    }
+
+    return nullptr;
+}
+
 ComponentCollection::ComponentCollection() {
     set_local_to_scene(true);
 }
@@ -263,6 +301,12 @@ void ComponentCollection::_bind_methods() {
     ClassDB::bind_static_method("ComponentCollection", D_METHOD("set_components", "obj", "components"), &ComponentCollection::set_components);
     ClassDB::bind_static_method("ComponentCollection", D_METHOD("remove_components", "obj"), &ComponentCollection::remove_components);
     ClassDB::bind_static_method("ComponentCollection", D_METHOD("get_components", "obj"), &ComponentCollection::get_components);
+
+    ClassDB::bind_static_method("ComponentCollection", D_METHOD("object_has_component", "obj", "component_class"), &ComponentCollection::object_has_component);
+    ClassDB::bind_static_method("ComponentCollection", D_METHOD("object_get_component", "obj", "component_class"), &ComponentCollection::object_get_component);
+    ClassDB::bind_static_method("ComponentCollection", D_METHOD("object_set_component", "obj", "value"), &ComponentCollection::object_set_component);
+    ClassDB::bind_static_method("ComponentCollection", D_METHOD("object_remove_component", "obj", "component_class"), &ComponentCollection::object_remove_component);
+
 //    ClassDB::bind_method(D_METHOD("get_component_dictionary"), &ComponentCollection::get_component_dictionary);
 //    ClassDB::bind_method(D_METHOD("set_component_dictionary", "value"), &ComponentCollection::set_component_dictionary);
     ClassDB::bind_method(D_METHOD("is_runtime_managed"), &ComponentCollection::is_runtime_managed);

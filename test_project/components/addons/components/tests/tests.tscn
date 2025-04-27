@@ -9,7 +9,7 @@
 
 [sub_resource type="Component" id="Component_7o42t"]
 
-[sub_resource type="GDExtensionComponent" id="GDExtensionComponent_m4ocf"]
+[sub_resource type="TestGDExtensionComponent" id="TestGDExtensionComponent_m4ocf"]
 
 [sub_resource type="Component" id="Component_m4ocf"]
 script = ExtResource("3_7o42t")
@@ -18,7 +18,7 @@ tmp_name = "temp"
 metadata/_custom_type_script = "uid://deab8iex6e2cf"
 
 [sub_resource type="ComponentCollection" id="ComponentCollection_sdog2"]
-components/GDExtensionComponent = SubResource("GDExtensionComponent_m4ocf")
+components/TestGDExtensionComponent = SubResource("TestGDExtensionComponent_m4ocf")
 components/Component = SubResource("Component_7o42t")
 components/TestGDScriptComponent = SubResource("Component_m4ocf")
 

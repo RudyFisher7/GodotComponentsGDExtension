@@ -12,8 +12,8 @@
 
 #include <godot_cpp/classes/object.hpp>
 
-class GDExtensionComponent : public Component {
-    GDCLASS(GDExtensionComponent, Component);
+class TestGDExtensionComponent : public Component {
+    GDCLASS(TestGDExtensionComponent, Component);
 
 public:
     void enter_tree() override;
