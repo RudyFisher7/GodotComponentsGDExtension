@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cciyc5tylal2b"]
+[gd_scene load_steps=14 format=3 uid="uid://cciyc5tylal2b"]
 
 [ext_resource type="Script" uid="uid://flge1f22hfvi" path="res://addons/components/tests/test1.gd" id="1_iohs2"]
 [ext_resource type="Script" uid="uid://c0feujtj2g5ew" path="res://addons/components/tests/editor_test_1.gd" id="2_qa0ot"]
@@ -6,8 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://ciq06la41uu1a" path="res://addons/components/tests/base_scene_1.tscn" id="4_m4ocf"]
 [ext_resource type="Script" uid="uid://stwidivd2p0t" path="res://addons/components/tests/networking_tests.gd" id="5_sr7fy"]
 [ext_resource type="PackedScene" uid="uid://dmlguatuxv1mv" path="res://addons/components/tests/networking_test_1.tscn" id="6_sdog2"]
-
-[sub_resource type="Resource" id="ComponentContainer_qa0ot"]
 
 [sub_resource type="Component" id="Component_7o42t"]
 
@@ -45,7 +43,6 @@ script = ExtResource("1_iohs2")
 
 [node name="EditorTest1" type="Node" parent="."]
 script = ExtResource("2_qa0ot")
-components1 = SubResource("ComponentContainer_qa0ot")
 metadata/components = SubResource("ComponentCollection_sdog2")
 
 [node name="ComponentRuntimeManager" type="ComponentRuntimeManager" parent="EditorTest1"]
