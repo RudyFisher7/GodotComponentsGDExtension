@@ -8,7 +8,6 @@ env.Append(CPPPATH=["components/"])
 sources = Glob("components/*.cpp")
 sources.extend(Glob("components/core/*.cpp"))
 sources.extend(Glob("components/components/*.cpp"))
-sources.extend(Glob("components/editor/*.cpp"))
 
 if env["target"] in ["editor", "template_debug"]:
     try:
