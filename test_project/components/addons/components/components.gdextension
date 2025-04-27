@@ -1,0 +1,16 @@
+[configuration]
+
+entry_symbol = "components_library_init"
+compatibility_minimum = 4.4
+reloadable = true
+
+[libraries]
+
+linux.x86_64.debug = "res://addons/components/bin/libgdcomponents.linux.template_debug.x86_64.so"
+linux.x86_64.release = "res://addons/components/bin/libgdcomponents.linux.template_release.x86_64.so"
+linux.debug.arm64 = "res://addons/components/bin/libgdcomponents.linux.template_debug.arm64.so"
+linux.release.arm64 = "res://addons/components/bin/libgdcomponents.linux.template_release.arm64.so"
+windows.x86_64.debug = "res://addons/components/bin/libgdcomponents.windows.template_debug.x86_64.dll"
+windows.x86_64.release = "res://addons/components/bin/libgdcomponents.windows.template_release.x86_64.dll"
+macos.debug = "res://addons/components/bin/libgdcomponents.macos.template_debug.framework"
+macos.release = "res://addons/components/bin/libgdcomponents.macos.template_release.framework"
