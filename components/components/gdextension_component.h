@@ -1,6 +1,5 @@
 
-#ifndef GODOT_COMPONENTS_EXTENSION_GDEXTENSION_COMPONENT_H
-#define GODOT_COMPONENTS_EXTENSION_GDEXTENSION_COMPONENT_H
+#pragma once
 
 
 // We don't need windows.h in this plugin but many others do and it throws up on itself all the time
@@ -9,21 +8,17 @@
 #include <windows.h>
 #endif
 
-#include <godot_cpp/classes/ref.hpp>
-#include <godot_cpp\classes\component.hpp>
+#include "core/component.h"
 
-using namespace godot;
-
+#include <godot_cpp/classes/object.hpp>
 
 class GDExtensionComponent : public Component {
     GDCLASS(GDExtensionComponent, Component);
 
 public:
-    virtual void _enter_tree() override;
+    void enter_tree() override;
+    void ready() override;
 
 protected:
     static void _bind_methods();
 };
-
-
-#endif //GODOT_COMPONENTS_EXTENSION_GDEXTENSION_COMPONENT_H

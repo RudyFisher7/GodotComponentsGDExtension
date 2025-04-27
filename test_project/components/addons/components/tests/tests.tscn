@@ -1,0 +1,87 @@
+[gd_scene load_steps=14 format=3 uid="uid://cciyc5tylal2b"]
+
+[ext_resource type="Script" uid="uid://flge1f22hfvi" path="res://addons/components/tests/test1.gd" id="1_iohs2"]
+[ext_resource type="Script" uid="uid://c0feujtj2g5ew" path="res://addons/components/tests/editor_test_1.gd" id="2_qa0ot"]
+[ext_resource type="Script" uid="uid://deab8iex6e2cf" path="res://addons/components/tests/test_gdscript_component.gd" id="3_7o42t"]
+[ext_resource type="PackedScene" uid="uid://ciq06la41uu1a" path="res://addons/components/tests/base_scene_1.tscn" id="4_m4ocf"]
+[ext_resource type="Script" uid="uid://stwidivd2p0t" path="res://addons/components/tests/networking_tests.gd" id="5_sr7fy"]
+[ext_resource type="PackedScene" uid="uid://dmlguatuxv1mv" path="res://addons/components/tests/networking_test_1.tscn" id="6_sdog2"]
+
+[sub_resource type="Component" id="Component_7o42t"]
+
+[sub_resource type="GDExtensionComponent" id="GDExtensionComponent_m4ocf"]
+
+[sub_resource type="Component" id="Component_m4ocf"]
+script = ExtResource("3_7o42t")
+tmp_0 = 0
+tmp_name = "temp"
+metadata/_custom_type_script = "uid://deab8iex6e2cf"
+
+[sub_resource type="ComponentCollection" id="ComponentCollection_sdog2"]
+components/GDExtensionComponent = SubResource("GDExtensionComponent_m4ocf")
+components/Component = SubResource("Component_7o42t")
+components/TestGDScriptComponent = SubResource("Component_m4ocf")
+
+[sub_resource type="Component" id="Component_sr7fy"]
+
+[sub_resource type="Component" id="Component_sdog2"]
+script = ExtResource("3_7o42t")
+tmp_0 = 0
+tmp_name = "temp"
+metadata/_custom_type_script = "uid://deab8iex6e2cf"
+
+[sub_resource type="ComponentCollection" id="ComponentCollection_wms0t"]
+components/TestGDScriptComponent = SubResource("Component_sdog2")
+components/Component = SubResource("Component_sr7fy")
+
+[node name="Tests" type="Node"]
+
+[node name="Test1" type="Node" parent="."]
+script = ExtResource("1_iohs2")
+
+[node name="ComponentRuntimeManager" type="ComponentRuntimeManager" parent="Test1"]
+
+[node name="EditorTest1" type="Node" parent="."]
+script = ExtResource("2_qa0ot")
+metadata/components = SubResource("ComponentCollection_sdog2")
+
+[node name="ComponentRuntimeManager" type="ComponentRuntimeManager" parent="EditorTest1"]
+
+[node name="InheritanceTest1" type="Node" parent="."]
+
+[node name="BaseScene1" parent="InheritanceTest1" instance=ExtResource("4_m4ocf")]
+metadata/components = SubResource("ComponentCollection_wms0t")
+
+[node name="NetworkingTests" type="Node" parent="." node_paths=PackedStringArray("spawner", "spawn_root", "label")]
+script = ExtResource("5_sr7fy")
+spawn_scene = ExtResource("6_sdog2")
+spawner = NodePath("MultiplayerSpawner")
+spawn_root = NodePath("VBoxContainer/VBoxContainer")
+label = NodePath("VBoxContainer/HBoxContainer/Label")
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="NetworkingTests"]
+spawn_path = NodePath("../VBoxContainer/VBoxContainer")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="NetworkingTests"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="NetworkingTests/VBoxContainer"]
+layout_mode = 2
+
+[node name="HostButton" type="Button" parent="NetworkingTests/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Host"
+
+[node name="JoinButton" type="Button" parent="NetworkingTests/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Join"
+
+[node name="Label" type="Label" parent="NetworkingTests/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="NetworkingTests/VBoxContainer"]
+layout_mode = 2
+
+[connection signal="pressed" from="NetworkingTests/VBoxContainer/HBoxContainer/HostButton" to="NetworkingTests" method="_on_host_button_pressed"]
+[connection signal="pressed" from="NetworkingTests/VBoxContainer/HBoxContainer/JoinButton" to="NetworkingTests" method="_on_join_button_pressed"]
