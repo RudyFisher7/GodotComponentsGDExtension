@@ -14,6 +14,7 @@
 #include <godot_cpp/classes/input_event.hpp>
 #include <godot_cpp/variant/string_name.hpp>
 #include <godot_cpp/core/gdvirtual.gen.inc>
+#include <godot_cpp/classes/scene_tree.hpp>
 
 using namespace godot;
 
@@ -21,7 +22,10 @@ class Component : public Resource {
     GDCLASS(Component, Resource);
 
 public:
-    Object *owner = nullptr;//todo:: add owner to container too
+    Object *owner = nullptr;
+
+protected:
+    static SceneTree *_scene_tree;
 
 public:
     Component();
@@ -50,6 +54,8 @@ public:
     virtual bool is_shortcut_input_overridden() const;
     virtual bool is_unhandled_input_overridden() const;
     virtual bool is_unhandled_key_input_overridden() const;
+
+    Node *get_node_or_null(const NodePath &p_path_from_root);
 
 protected:
     static void _bind_methods();

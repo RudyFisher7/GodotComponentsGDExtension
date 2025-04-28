@@ -2,9 +2,29 @@
 #include "component.h"
 
 #include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/script.hpp>
+#include <godot_cpp/classes/main_loop.hpp>
+#include <godot_cpp/classes/window.hpp>
+
+SceneTree *Component::_scene_tree = nullptr;
 
 Component::Component() {
+    static bool did_try = false;
+    if (!did_try && _scene_tree == nullptr) {
+        did_try = true;
+        Engine *engine = Engine::get_singleton();
+
+        ERR_FAIL_COND_MSG(engine == nullptr, "Engine singleton is null!?");
+
+        MainLoop *main_loop = engine->get_main_loop();
+        _scene_tree = Object::cast_to<SceneTree>(main_loop);
+
+        if (_scene_tree == nullptr) {
+            ERR_PRINT_ONCE_ED("Engine->get_main_loop() didn't return a SceneTree. Main loop must be of type SceneTree for Components' scene-related functionality to work.");
+        }
+    }
+
     set_local_to_scene(true);
 }
 
@@ -111,8 +131,19 @@ bool Component::is_unhandled_key_input_overridden() const {
     return GDVIRTUAL_IS_OVERRIDDEN(_unhandled_key_input);
 }
 
+Node *Component::get_node_or_null(const NodePath &p_path_from_root) {
+    Node *result = nullptr;
+
+    if (_scene_tree) {
+        result = _scene_tree->get_root()->get_node_or_null(p_path_from_root);
+    }
+
+    return result;
+}
+
 void Component::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_component_class"), &Component::get_component_class);
+    ClassDB::bind_method(D_METHOD("get_node_or_null", "path_from_root"), &Component::get_node_or_null);
 
     GDVIRTUAL_BIND(_enter_tree);
     GDVIRTUAL_BIND(_exit_tree);
