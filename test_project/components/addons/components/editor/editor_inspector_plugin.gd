@@ -18,6 +18,7 @@ func _parse_end(object: Object) -> void:
 	dict[&"add_picker"].resource_changed.connect(_on_add_resource_changed.bind(dict[&"add_picker"]))
 	dict[&"remove_picker"].resource_changed.connect(_on_remove_resource_changed.bind(dict[&"remove_picker"]))
 	dict[&"add_remove_runtime_button"].pressed.connect(_on_add_remove_runtime_button_pressed)
+	dict[&"copy_property_path_button"].pressed.connect(_on_copy_path_button_pressed)
 	
 	add_custom_control(dict[&"root"])
 
@@ -76,3 +77,6 @@ func _on_add_remove_runtime_button_pressed() -> void:
 		var child := ComponentRuntimeManager.new()
 		_object.add_child(child, true, Node.INTERNAL_MODE_DISABLED)
 		child.owner = EditorInterface.get_edited_scene_root()
+
+func _on_copy_path_button_pressed() -> void:
+	DisplayServer.clipboard_set("metadata/components:components/<component_class>:<property>")

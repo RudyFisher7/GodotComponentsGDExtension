@@ -67,11 +67,18 @@ static func build() -> Dictionary[StringName, Control]:
 	row2.text = "Add/Remove Runtime Manager"
 	skeleton.add_child(row2)
 	
+	var row3 := Button.new()
+	row3.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	row3.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	row3.text = "Copy Components Property Path To Clipboard"
+	skeleton.add_child(row3)
+	
 	root.add_child(skeleton)
 	
 	result[&"root"] = root
 	result[&"add_picker"] = add_picker
 	result[&"remove_picker"] = remove_picker
 	result[&"add_remove_runtime_button"] = row2
+	result[&"copy_property_path_button"] = row3
 	
 	return result

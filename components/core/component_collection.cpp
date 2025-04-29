@@ -69,7 +69,7 @@ void ComponentCollection::object_remove_component(Object *obj, const StringName 
     }
 }
 
-Ref<ComponentCollection> ComponentCollection::object_get_component(Object *obj, const StringName &component_class) {
+Ref<Component> ComponentCollection::object_get_component(Object *obj, const StringName &component_class) {
     Ref<ComponentCollection> collection = get_components(obj);
 
     if (collection.is_valid()) {

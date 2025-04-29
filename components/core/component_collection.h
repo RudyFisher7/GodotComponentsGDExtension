@@ -36,7 +36,7 @@ public:
     static bool object_has_component(Object *obj, const StringName &component_class);
     static void object_set_component(Object *obj, const Ref<Component> &component);
     static void object_remove_component(Object *obj, const StringName &component_class);
-    static Ref<ComponentCollection> object_get_component(Object *obj, const StringName &component_class);
+    static Ref<Component> object_get_component(Object *obj, const StringName &component_class);
 
     ComponentCollection();
     virtual ~ComponentCollection();
