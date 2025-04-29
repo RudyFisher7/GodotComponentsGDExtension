@@ -17,12 +17,12 @@ CharacterBodyFirstPersonController3D::CharacterBodyFirstPersonController3D() :
 
 }
 
-void CharacterBodyFirstPersonController3D::enter_tree() {
+void CharacterBodyFirstPersonController3D::enter_tree(Node *p_parent) {
+    _parent = p_parent;
     //
 }
 
 void CharacterBodyFirstPersonController3D::physics_process(double p_delta) {
-
 }
 
 bool CharacterBodyFirstPersonController3D::input(const Ref<InputEvent> &p_event) {
@@ -45,7 +45,7 @@ NodePath CharacterBodyFirstPersonController3D::get_character_body_path() const {
 void CharacterBodyFirstPersonController3D::set_character_body_path(const NodePath &p_character_body_path) {
     character_body_path = p_character_body_path;
 
-    if (_scene_tree) {
+    if (_parent) {
         Node *node = get_node_or_null(character_body_path);
         _character_body = Object::cast_to<CharacterBody3D>(node);
     }
@@ -74,14 +74,23 @@ NodePath CharacterBodyFirstPersonController3D::get_camera_path() const {
 void CharacterBodyFirstPersonController3D::set_camera_path(const NodePath &p_value) {
     camera_path = p_value;
 
-    if (_scene_tree) {
+    if (_parent) {
         Node *node = get_node_or_null(camera_path);
         _camera = Object::cast_to<Camera3D>(node);
     }
 }
 
+CharacterBody3D *CharacterBodyFirstPersonController3D::get_character_body() const {
+    return _character_body;
+}
+
+Camera3D *CharacterBodyFirstPersonController3D::get_camera() const {
+    return _camera;
+}
+
 void CharacterBodyFirstPersonController3D::_bind_methods() {
-    //
+    ClassDB::bind_method(D_METHOD("get_character_body"), &CharacterBodyFirstPersonController3D::get_character_body);
+    ClassDB::bind_method(D_METHOD("get_camera"), &CharacterBodyFirstPersonController3D::get_camera);
 }
 
 void CharacterBodyFirstPersonController3D::_handle_rotation(float p_delta) {

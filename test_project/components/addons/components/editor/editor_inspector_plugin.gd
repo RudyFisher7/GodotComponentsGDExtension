@@ -79,4 +79,4 @@ func _on_add_remove_runtime_button_pressed() -> void:
 		child.owner = EditorInterface.get_edited_scene_root()
 
 func _on_copy_path_button_pressed() -> void:
-	DisplayServer.clipboard_set("metadata/components:<component_class>:<property>")
+	DisplayServer.clipboard_set("metadata/components:components/<component_class>:<property>")

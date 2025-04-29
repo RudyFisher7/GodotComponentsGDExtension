@@ -27,7 +27,7 @@ protected:
 
 public:
     CharacterBodyFirstPersonController3D();
-    void enter_tree() override;
+    void enter_tree(Node *p_parent) override;
     void physics_process(double p_delta) override;
     bool input(const Ref<InputEvent> &p_event) override;
     bool is_physics_process_overridden() const override;
@@ -41,6 +41,9 @@ public:
     void set_mouse_sensitivity(const Vector2 &p_mouse_sensitivity);
     NodePath get_camera_path() const;
     void set_camera_path(const NodePath &p_value);
+
+    CharacterBody3D *get_character_body() const;
+    Camera3D *get_camera() const;
 
 protected:
     static void _bind_methods();

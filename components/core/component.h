@@ -9,6 +9,7 @@
 #endif
 
 #include <godot_cpp/classes/object.hpp>
+#include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/classes/resource.hpp>
 #include <godot_cpp/classes/input_event.hpp>
@@ -25,7 +26,7 @@ public:
     Object *owner = nullptr;
 
 protected:
-    static SceneTree *_scene_tree;
+    Node *_parent = nullptr;
 
 public:
     Component();
@@ -36,7 +37,7 @@ public:
     // note:: gdextension's GDVIRTUAL_BIND macro doesn't allow native classes to
     // override them, only GDScript. if this is changed to mirror Godot's behavior, then
     // replace these overridden virtuals with the GDVIRTUAL_BIND functions.
-    virtual void enter_tree();
+    virtual void enter_tree(Node *p_parent);
     virtual void exit_tree();
     virtual void ready();
     virtual void process(double delta);
@@ -55,12 +56,13 @@ public:
     virtual bool is_unhandled_input_overridden() const;
     virtual bool is_unhandled_key_input_overridden() const;
 
-    Node *get_node_or_null(const NodePath &p_path_from_root);
+    Node *get_node_or_null(const NodePath &p_path_from_parent_node) const;
+    Node *get_parent_node() const;
 
 protected:
     static void _bind_methods();
 
-    GDVIRTUAL0(_enter_tree)
+    GDVIRTUAL1(_enter_tree, Node*)
     GDVIRTUAL0(_exit_tree)
     GDVIRTUAL0(_ready)
     GDVIRTUAL1(_process, double)

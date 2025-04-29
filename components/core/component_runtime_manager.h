@@ -11,7 +11,6 @@ class ComponentRuntimeManager : public Node {
     GDCLASS(ComponentRuntimeManager, Node);
 
 protected:
-    static SceneTree *_scene_tree;
     Node *_parent = nullptr;
     Ref<ComponentCollection> _components;
 

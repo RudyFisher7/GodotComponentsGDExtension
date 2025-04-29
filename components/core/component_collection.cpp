@@ -19,8 +19,9 @@ void ComponentCollection::set_components(Object *obj, const Ref<ComponentCollect
 
     ERR_FAIL_COND_MSG(engine == nullptr, "Engine singleton is null!?");
 
-    if (!engine->is_editor_hint() && components->is_runtime_managed()) {
-        components->call_components_enter_tree();
+    Node *node = Object::cast_to<Node>(obj);
+    if (!engine->is_editor_hint() && components->is_runtime_managed() && node != nullptr) {
+        components->call_components_enter_tree(node);
         components->call_components_ready();
     }
 }
@@ -159,7 +160,7 @@ void ComponentCollection::set_component(const Ref<Component> &value) {
     ERR_FAIL_COND_MSG(engine == nullptr, "Engine singleton is null!?");
 
     if (!engine->is_editor_hint() && is_runtime_managed()) {
-        value->enter_tree();
+        value->enter_tree(_parent);
         value->ready();
     }
 
@@ -208,7 +209,8 @@ bool ComponentCollection::is_processing_unhandled_key_input() const {
     return !_unhandled_key_input_group.is_empty();
 }
 
-void ComponentCollection::call_components_enter_tree() {
+void ComponentCollection::call_components_enter_tree(Node *p_parent) {
+    _parent = p_parent;
 //    Array array = _components.values();
 //    for (int i = 0; i < array.size(); ++i) {
 //        Ref<Component> c = Object::cast_to<Component>(array[i]);
@@ -216,7 +218,7 @@ void ComponentCollection::call_components_enter_tree() {
 //    }
 
     for (const KeyValue<StringName, Ref<Component>> &K : _components) {
-        K.value->enter_tree();
+        K.value->enter_tree(p_parent);
     }
 }
 
@@ -230,6 +232,8 @@ void ComponentCollection::call_components_exit_tree() {
     for (const KeyValue<StringName, Ref<Component>> &K : _components) {
         K.value->exit_tree();
     }
+
+    _parent = nullptr;
 }
 
 void ComponentCollection::call_components_ready() {
