@@ -10,6 +10,7 @@ This GDExtention adds components to Godot.
 	a. Use the "Add Component" OptionButton to choose a component to add to the Node.
 	b. Use the "Remove Component" OptionButton to remove a component from the Node.
 	c. The new Component class supports Node's SceneTree-related notification functions (e.g., _physics_process(), _input(), etc.). Use the "Add/Remove Runtime Manager" Button to add/remove a child Node that will manage these notifications for the components during runtime.
+	d. The "Copy Components Property Path To Clipboard" button allows for convenient pasting for use in get(), set(), and MultiplayerSynchronizer's SceneReplicationConfig.
 
 ###Code
 1. Use ComponentCollection's static functions to manage a Node's components (get_components(), set_components(), remove_components(), has_components()).
