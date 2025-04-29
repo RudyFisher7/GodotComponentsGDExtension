@@ -26,7 +26,7 @@ StringName Component::get_component_class() {
 
 void Component::enter_tree(Node *p_parent) {
     _parent = p_parent;
-    if (GDVIRTUAL_CALL(_enter_tree, p_parent)) {
+    if (GDVIRTUAL_CALL(_enter_tree)) {
         //
     }
 }
@@ -136,7 +136,7 @@ void Component::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_node_or_null", "path_from_parent_node"), &Component::get_node_or_null);
     ClassDB::bind_method(D_METHOD("get_parent_node"), &Component::get_parent_node);
 
-    GDVIRTUAL_BIND(_enter_tree, "parent");
+    GDVIRTUAL_BIND(_enter_tree);
     GDVIRTUAL_BIND(_exit_tree);
     GDVIRTUAL_BIND(_ready);
     GDVIRTUAL_BIND(_process, "delta");

@@ -6,6 +6,7 @@
 #include "core/component_collection.h"
 #include "core/component_runtime_manager.h"
 #include "components/test_gdextension_component.h"
+#include "components/character_body_first_person_controller_3d.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/class_db.hpp>
@@ -20,9 +21,10 @@ void initialize_components_types(ModuleInitializationLevel p_level) {
     }
 
     GDREGISTER_RUNTIME_CLASS(ComponentRuntimeManager);
+    ClassDB::register_class<ComponentCollection>();
     ClassDB::register_class<Component>();
     ClassDB::register_class<TestGDExtensionComponent>();
-    ClassDB::register_class<ComponentCollection>();
+    ClassDB::register_class<CharacterBodyFirstPersonController3D>();
 }
 
 void uninitialize_components_types(ModuleInitializationLevel p_level) {

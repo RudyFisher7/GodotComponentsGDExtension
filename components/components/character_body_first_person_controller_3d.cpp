@@ -19,7 +19,16 @@ CharacterBodyFirstPersonController3D::CharacterBodyFirstPersonController3D() :
 
 void CharacterBodyFirstPersonController3D::enter_tree(Node *p_parent) {
     _parent = p_parent;
-    //
+}
+
+void CharacterBodyFirstPersonController3D::ready() {
+    if (!_character_body) {
+        _try_set_character_body();
+    }
+
+    if (!_camera) {
+        _try_set_camera();
+    }
 }
 
 void CharacterBodyFirstPersonController3D::physics_process(double p_delta) {
@@ -44,11 +53,7 @@ NodePath CharacterBodyFirstPersonController3D::get_character_body_path() const {
 
 void CharacterBodyFirstPersonController3D::set_character_body_path(const NodePath &p_character_body_path) {
     character_body_path = p_character_body_path;
-
-    if (_parent) {
-        Node *node = get_node_or_null(character_body_path);
-        _character_body = Object::cast_to<CharacterBody3D>(node);
-    }
+    _try_set_character_body();
 }
 
 float CharacterBodyFirstPersonController3D::get_move_speed() const {
@@ -73,11 +78,7 @@ NodePath CharacterBodyFirstPersonController3D::get_camera_path() const {
 
 void CharacterBodyFirstPersonController3D::set_camera_path(const NodePath &p_value) {
     camera_path = p_value;
-
-    if (_parent) {
-        Node *node = get_node_or_null(camera_path);
-        _camera = Object::cast_to<Camera3D>(node);
-    }
+    _try_set_camera();
 }
 
 CharacterBody3D *CharacterBodyFirstPersonController3D::get_character_body() const {
@@ -89,10 +90,32 @@ Camera3D *CharacterBodyFirstPersonController3D::get_camera() const {
 }
 
 void CharacterBodyFirstPersonController3D::_bind_methods() {
+    ClassDB::bind_method(D_METHOD("set_character_body_path", "value"), &CharacterBodyFirstPersonController3D::set_character_body_path);
+    ClassDB::bind_method(D_METHOD("get_character_body_path"), &CharacterBodyFirstPersonController3D::get_character_body_path);
+    ClassDB::bind_method(D_METHOD("set_camera_path", "value"), &CharacterBodyFirstPersonController3D::set_camera_path);
+    ClassDB::bind_method(D_METHOD("get_camera_path"), &CharacterBodyFirstPersonController3D::get_camera_path);
+
     ClassDB::bind_method(D_METHOD("get_character_body"), &CharacterBodyFirstPersonController3D::get_character_body);
     ClassDB::bind_method(D_METHOD("get_camera"), &CharacterBodyFirstPersonController3D::get_camera);
+
+    ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "character_body_path", PropertyHint::PROPERTY_HINT_NODE_PATH_VALID_TYPES, "CharacterBody3D"), "set_character_body_path", "get_character_body_path");
+    ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "camera_path", PropertyHint::PROPERTY_HINT_NODE_PATH_VALID_TYPES, "Camera3D"), "set_camera_path", "get_camera_path");
 }
 
 void CharacterBodyFirstPersonController3D::_handle_rotation(float p_delta) {
     //
+}
+
+void CharacterBodyFirstPersonController3D::_try_set_character_body() {
+    if (_parent) {
+        Node *node = get_node_or_null(character_body_path);
+        _character_body = Object::cast_to<CharacterBody3D>(node);
+    }
+}
+
+void CharacterBodyFirstPersonController3D::_try_set_camera() {
+    if (_parent) {
+        Node *node = get_node_or_null(camera_path);
+        _camera = Object::cast_to<Camera3D>(node);
+    }
 }

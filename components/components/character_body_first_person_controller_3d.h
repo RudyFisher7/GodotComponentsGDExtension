@@ -28,6 +28,7 @@ protected:
 public:
     CharacterBodyFirstPersonController3D();
     void enter_tree(Node *p_parent) override;
+    void ready() override;
     void physics_process(double p_delta) override;
     bool input(const Ref<InputEvent> &p_event) override;
     bool is_physics_process_overridden() const override;
@@ -48,4 +49,6 @@ public:
 protected:
     static void _bind_methods();
     virtual void _handle_rotation(float p_delta);
+    void _try_set_character_body();
+    void _try_set_camera();
 };

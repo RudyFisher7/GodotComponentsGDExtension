@@ -62,7 +62,7 @@ public:
 protected:
     static void _bind_methods();
 
-    GDVIRTUAL1(_enter_tree, Node*)
+    GDVIRTUAL0(_enter_tree)
     GDVIRTUAL0(_exit_tree)
     GDVIRTUAL0(_ready)
     GDVIRTUAL1(_process, double)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cciyc5tylal2b"]
+[gd_scene load_steps=17 format=3 uid="uid://cciyc5tylal2b"]
 
 [ext_resource type="Script" uid="uid://flge1f22hfvi" path="res://addons/components/tests/test1.gd" id="1_iohs2"]
 [ext_resource type="Script" uid="uid://c0feujtj2g5ew" path="res://addons/components/tests/editor_test_1.gd" id="2_qa0ot"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://ciq06la41uu1a" path="res://addons/components/tests/base_scene_1.tscn" id="4_m4ocf"]
 [ext_resource type="Script" uid="uid://stwidivd2p0t" path="res://addons/components/tests/networking_tests.gd" id="5_sr7fy"]
 [ext_resource type="PackedScene" uid="uid://dmlguatuxv1mv" path="res://addons/components/tests/networking_test_1.tscn" id="6_sdog2"]
+[ext_resource type="PackedScene" uid="uid://238gs5c0ya7i" path="res://addons/components/tests/test_character_body_3d.tscn" id="7_wms0t"]
 
 [sub_resource type="Component" id="Component_7o42t"]
 
@@ -33,6 +34,13 @@ metadata/_custom_type_script = "uid://deab8iex6e2cf"
 [sub_resource type="ComponentCollection" id="ComponentCollection_wms0t"]
 components/TestGDScriptComponent = SubResource("Component_sdog2")
 components/Component = SubResource("Component_sr7fy")
+
+[sub_resource type="CharacterBodyFirstPersonController3D" id="CharacterBodyFirstPersonController3D_tkq5a"]
+character_body_path = NodePath(".")
+camera_path = NodePath("../Camera3D")
+
+[sub_resource type="ComponentCollection" id="ComponentCollection_uojvu"]
+components/CharacterBodyFirstPersonController3D = SubResource("CharacterBodyFirstPersonController3D_tkq5a")
 
 [node name="Tests" type="Node"]
 
@@ -82,6 +90,11 @@ layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="NetworkingTests/VBoxContainer"]
 layout_mode = 2
+
+[node name="CharacterBody3D" parent="." instance=ExtResource("7_wms0t")]
+metadata/components = SubResource("ComponentCollection_uojvu")
+
+[node name="Camera3D" type="Camera3D" parent="."]
 
 [connection signal="pressed" from="NetworkingTests/VBoxContainer/HBoxContainer/HostButton" to="NetworkingTests" method="_on_host_button_pressed"]
 [connection signal="pressed" from="NetworkingTests/VBoxContainer/HBoxContainer/JoinButton" to="NetworkingTests" method="_on_join_button_pressed"]
