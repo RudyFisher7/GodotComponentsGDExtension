@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://cciyc5tylal2b"]
+[gd_scene load_steps=22 format=3 uid="uid://cciyc5tylal2b"]
 
 [ext_resource type="Script" uid="uid://flge1f22hfvi" path="res://addons/components/tests/test1.gd" id="1_iohs2"]
 [ext_resource type="Script" uid="uid://c0feujtj2g5ew" path="res://addons/components/tests/editor_test_1.gd" id="2_qa0ot"]
@@ -7,6 +7,18 @@
 [ext_resource type="Script" uid="uid://stwidivd2p0t" path="res://addons/components/tests/networking_tests.gd" id="5_sr7fy"]
 [ext_resource type="PackedScene" uid="uid://dmlguatuxv1mv" path="res://addons/components/tests/networking_test_1.tscn" id="6_sdog2"]
 [ext_resource type="PackedScene" uid="uid://238gs5c0ya7i" path="res://addons/components/tests/test_character_body_3d.tscn" id="7_wms0t"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wms0t"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_tkq5a"]
+sky_material = SubResource("ProceduralSkyMaterial_wms0t")
+
+[sub_resource type="Environment" id="Environment_uojvu"]
+background_mode = 2
+sky = SubResource("Sky_tkq5a")
+tonemap_mode = 2
 
 [sub_resource type="Component" id="Component_7o42t"]
 
@@ -35,14 +47,35 @@ metadata/_custom_type_script = "uid://deab8iex6e2cf"
 components/TestGDScriptComponent = SubResource("Component_sdog2")
 components/Component = SubResource("Component_sr7fy")
 
-[sub_resource type="CharacterBodyFirstPersonController3D" id="CharacterBodyFirstPersonController3D_tkq5a"]
-character_body_path = NodePath(".")
-camera_path = NodePath("../Camera3D")
+[sub_resource type="BoxShape3D" id="BoxShape3D_4sy8q"]
+size = Vector3(10, 1, 10)
 
-[sub_resource type="ComponentCollection" id="ComponentCollection_uojvu"]
-components/CharacterBodyFirstPersonController3D = SubResource("CharacterBodyFirstPersonController3D_tkq5a")
+[sub_resource type="PlaneMesh" id="PlaneMesh_wms0t"]
+size = Vector2(10, 10)
+
+[sub_resource type="CharacterBodyFirstPersonController3D" id="CharacterBodyFirstPersonController3D_wms0t"]
+character_body_path = NodePath(".")
+camera_path = NodePath("Camera3D")
+move_speed = 3.5
+mouse_sensitivity = Vector2(0.2, 0.1)
+move_left = &"ui_left"
+move_right = &"ui_right"
+move_forward = &"ui_up"
+move_backward = &"ui_down"
+toggle_mouse_captured = &"ui_cancel"
+
+[sub_resource type="ComponentCollection" id="ComponentCollection_tkq5a"]
+components/CharacterBodyFirstPersonController3D = SubResource("CharacterBodyFirstPersonController3D_wms0t")
 
 [node name="Tests" type="Node"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_uojvu")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+directional_shadow_max_distance = 1.0
 
 [node name="Test1" type="Node" parent="."]
 script = ExtResource("1_iohs2")
@@ -91,10 +124,22 @@ layout_mode = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="NetworkingTests/VBoxContainer"]
 layout_mode = 2
 
-[node name="CharacterBody3D" parent="." instance=ExtResource("7_wms0t")]
-metadata/components = SubResource("ComponentCollection_uojvu")
+[node name="Node3D" type="Node3D" parent="."]
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="StaticBody3D" type="StaticBody3D" parent="Node3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.752172, 0)
+shape = SubResource("BoxShape3D_4sy8q")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/StaticBody3D"]
+mesh = SubResource("PlaneMesh_wms0t")
+
+[node name="CharacterBody3D" parent="Node3D" instance=ExtResource("7_wms0t")]
+metadata/components = SubResource("ComponentCollection_tkq5a")
+
+[node name="Camera3D" type="Camera3D" parent="Node3D/CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.991504, 0)
 
 [connection signal="pressed" from="NetworkingTests/VBoxContainer/HBoxContainer/HostButton" to="NetworkingTests" method="_on_host_button_pressed"]
 [connection signal="pressed" from="NetworkingTests/VBoxContainer/HBoxContainer/JoinButton" to="NetworkingTests" method="_on_join_button_pressed"]

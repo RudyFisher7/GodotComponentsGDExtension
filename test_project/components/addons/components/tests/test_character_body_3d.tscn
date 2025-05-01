@@ -2,6 +2,13 @@
 
 [sub_resource type="CharacterBodyFirstPersonController3D" id="CharacterBodyFirstPersonController3D_xxgfj"]
 character_body_path = NodePath(".")
+move_speed = 3.5
+mouse_sensitivity = Vector2(0.2, 0.1)
+move_left = &"ui_left"
+move_right = &"ui_right"
+move_forward = &"ui_up"
+move_backward = &"ui_down"
+toggle_mouse_captured = &"ui_cancel"
 
 [sub_resource type="ComponentCollection" id="ComponentCollection_c4cpm"]
 components/CharacterBodyFirstPersonController3D = SubResource("CharacterBodyFirstPersonController3D_xxgfj")
@@ -12,4 +19,7 @@ components/CharacterBodyFirstPersonController3D = SubResource("CharacterBodyFirs
 metadata/components = SubResource("ComponentCollection_c4cpm")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05348, 0)
 shape = SubResource("CapsuleShape3D_xxgfj")
+
+[node name="ComponentRuntimeManager" type="ComponentRuntimeManager" parent="."]

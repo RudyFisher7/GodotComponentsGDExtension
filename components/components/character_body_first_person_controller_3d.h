@@ -20,6 +20,12 @@ public:
     float move_speed;
     Vector2 mouse_sensitivity;
 
+    StringName move_left;
+    StringName move_right;
+    StringName move_forward;
+    StringName move_backward;
+    StringName toggle_mouse_captured;
+
 protected:
     CharacterBody3D *_character_body;
     Camera3D *_camera;
@@ -36,12 +42,23 @@ public:
 
     NodePath get_character_body_path() const;
     void set_character_body_path(const NodePath &p_character_body_path);
+    NodePath get_camera_path() const;
+    void set_camera_path(const NodePath &p_value);
     float get_move_speed() const;
     void set_move_speed(float p_move_speed);
     Vector2 get_mouse_sensitivity() const;
     void set_mouse_sensitivity(const Vector2 &p_mouse_sensitivity);
-    NodePath get_camera_path() const;
-    void set_camera_path(const NodePath &p_value);
+
+    const StringName &get_move_left() const;
+    void set_move_left(const StringName &p_value);
+    const StringName &get_move_right() const;
+    void set_move_right(const StringName &p_value);
+    const StringName &get_move_forward() const;
+    void set_move_forward(const StringName &p_value);
+    const StringName &get_move_backward() const;
+    void set_move_backward(const StringName &p_value);
+    const StringName &get_toggle_mouse_captured() const;
+    void set_toggle_mouse_captured(const StringName &p_value);
 
     CharacterBody3D *get_character_body() const;
     Camera3D *get_camera() const;
