@@ -27,3 +27,5 @@ This GDExtention adds components to Godot.
 ## Current Known Issues
 - The editor plugin causes the ComponentRuntimeManager to process in editor instead of just in runtime (like tool annotation).
 - The inheriting scene's components don't get their exported properties updated from the base scene's like regular Resources should. You will need to delete the inheriting scene and re-instantiate it after editing the base scene.
+  - Note that this happens with any Resource type when exported and set as "local to scene", so this is Godot's normal behavior with Resources.
+  - Setting "local to scene" enables inheriting scenes to edit the properties, otherwise the Resource's exported properties are readonly.

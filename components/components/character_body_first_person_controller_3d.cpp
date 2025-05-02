@@ -7,20 +7,23 @@
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/input.hpp>
 #include <godot_cpp/classes/input_event_mouse_motion.hpp>
+#include <godot_cpp/core/math.hpp>
 
 CharacterBodyFirstPersonController3D::CharacterBodyFirstPersonController3D() :
-        character_body_path(),
-        camera_path(),
+        character_body_path("."),
+        camera_path("./Camera3D"),
         move_speed(2.5),
         mouse_sensitivity(0.1, 0.1),
+        vertical_camera_rotation_limits(-75.0, 65.0),
+        move_left("ui_left"),
+        move_right("ui_right"),
+        move_forward("ui_up"),
+        move_backward("ui_down"),
+        toggle_mouse_captured("ui_cancel"),
         _character_body(nullptr),
         _camera(nullptr),
         _current_rotation_velocity(0.0, 0.0),
-        move_left(),
-        move_right(),
-        move_forward(),
-        move_backward(),
-        toggle_mouse_captured()
+        _vertical_camera_rotation_limits_radions(Math::deg_to_rad(vertical_camera_rotation_limits.x), Math::deg_to_rad(vertical_camera_rotation_limits.y))
 {
 
 }
@@ -45,26 +48,7 @@ void CharacterBodyFirstPersonController3D::physics_process(double p_delta) {
     }
 
     _handle_rotation(p_delta);
-
-    if (!_character_body->is_on_floor()) {
-        _character_body->set_velocity(_character_body->get_velocity() + (_character_body->get_gravity() * float(p_delta)));
-    }
-
-    Input *input = Input::get_singleton();
-
-    Vector2 input_vector = input->get_vector(move_left, move_right, move_forward, move_backward);
-    Vector3 direction = _character_body->get_transform().basis.xform(Vector3(input_vector.x, 0.0, input_vector.y));
-    direction.normalize();
-
-    if (! direction.is_zero_approx()) {
-        Vector3 velocity = direction * move_speed;
-        _character_body->set_velocity(velocity);
-    } else {
-        Vector3 velocity = _character_body->get_velocity().move_toward(Vector3(), move_speed);
-        _character_body->set_velocity(velocity);
-    }
-
-    _character_body->move_and_slide();
+    _handle_movement(p_delta);
 }
 
 bool CharacterBodyFirstPersonController3D::input(const Ref<InputEvent> &p_event) {
@@ -97,8 +81,8 @@ NodePath CharacterBodyFirstPersonController3D::get_character_body_path() const {
     return character_body_path;
 }
 
-void CharacterBodyFirstPersonController3D::set_character_body_path(const NodePath &p_character_body_path) {
-    character_body_path = p_character_body_path;
+void CharacterBodyFirstPersonController3D::set_character_body_path(const NodePath &p_value) {
+    character_body_path = p_value;
     _try_set_character_body();
 }
 
@@ -115,16 +99,26 @@ float CharacterBodyFirstPersonController3D::get_move_speed() const {
     return move_speed;
 }
 
-void CharacterBodyFirstPersonController3D::set_move_speed(float p_move_speed) {
-    move_speed = p_move_speed;
+void CharacterBodyFirstPersonController3D::set_move_speed(float p_value) {
+    move_speed = p_value;
 }
 
 Vector2 CharacterBodyFirstPersonController3D::get_mouse_sensitivity() const {
     return mouse_sensitivity;
 }
 
-void CharacterBodyFirstPersonController3D::set_mouse_sensitivity(const Vector2 &p_mouse_sensitivity) {
-    mouse_sensitivity = p_mouse_sensitivity;
+void CharacterBodyFirstPersonController3D::set_mouse_sensitivity(const Vector2 &p_value) {
+    mouse_sensitivity = p_value;
+}
+
+Vector2 CharacterBodyFirstPersonController3D::get_vertical_camera_rotation_limits() const {
+    return vertical_camera_rotation_limits;
+}
+
+void CharacterBodyFirstPersonController3D::set_vertical_camera_rotation_limits(const Vector2 &p_value) {
+    vertical_camera_rotation_limits = p_value;
+    _vertical_camera_rotation_limits_radions.x = Math::deg_to_rad(vertical_camera_rotation_limits.x);
+    _vertical_camera_rotation_limits_radions.y = Math::deg_to_rad(vertical_camera_rotation_limits.y);
 }
 
 const StringName &CharacterBodyFirstPersonController3D::get_move_left() const {
@@ -185,6 +179,8 @@ void CharacterBodyFirstPersonController3D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_move_speed"), &CharacterBodyFirstPersonController3D::get_move_speed);
     ClassDB::bind_method(D_METHOD("set_mouse_sensitivity", "value"), &CharacterBodyFirstPersonController3D::set_mouse_sensitivity);
     ClassDB::bind_method(D_METHOD("get_mouse_sensitivity"), &CharacterBodyFirstPersonController3D::get_mouse_sensitivity);
+    ClassDB::bind_method(D_METHOD("set_vertical_camera_rotation_limits", "value"), &CharacterBodyFirstPersonController3D::set_vertical_camera_rotation_limits);
+    ClassDB::bind_method(D_METHOD("get_vertical_camera_rotation_limits"), &CharacterBodyFirstPersonController3D::get_vertical_camera_rotation_limits);
 
     ClassDB::bind_method(D_METHOD("set_move_left", "value"), &CharacterBodyFirstPersonController3D::set_move_left);
     ClassDB::bind_method(D_METHOD("get_move_left"), &CharacterBodyFirstPersonController3D::get_move_left);
@@ -207,6 +203,7 @@ void CharacterBodyFirstPersonController3D::_bind_methods() {
     ADD_GROUP("Properties", "");
     ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "move_speed"), "set_move_speed", "get_move_speed");
     ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "mouse_sensitivity"), "set_mouse_sensitivity", "get_mouse_sensitivity");
+    ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "vertical_camera_rotation_limits"), "set_vertical_camera_rotation_limits", "get_vertical_camera_rotation_limits");
 
     ADD_GROUP("Input Actions", "");
     ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "move_left"), "set_move_left", "get_move_left");
@@ -216,7 +213,7 @@ void CharacterBodyFirstPersonController3D::_bind_methods() {
     ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "toggle_mouse_captured"), "set_toggle_mouse_captured", "get_toggle_mouse_captured");
 }
 
-void CharacterBodyFirstPersonController3D::_handle_rotation(float p_delta) {
+void CharacterBodyFirstPersonController3D::_handle_rotation(double p_delta) {
     Input *input = Input::get_singleton();
     if (input->get_mouse_mode() != Input::MOUSE_MODE_CAPTURED) {
         return;
@@ -224,9 +221,35 @@ void CharacterBodyFirstPersonController3D::_handle_rotation(float p_delta) {
 
     if (!_current_rotation_velocity.is_zero_approx()) {
         _camera->rotate_x(_current_rotation_velocity.y * mouse_sensitivity.x * p_delta);
+        Vector3 rotation = _camera->get_rotation();
+        rotation.x = Math::clamp(rotation.x, _vertical_camera_rotation_limits_radions.x, _vertical_camera_rotation_limits_radions.y);
+        _camera->set_rotation(rotation);
+
         _character_body->rotate_y(_current_rotation_velocity.x * mouse_sensitivity.y * p_delta);
         _current_rotation_velocity = Vector2();
     }
+}
+
+void CharacterBodyFirstPersonController3D::_handle_movement(double p_delta) {
+    if (!_character_body->is_on_floor()) {
+        _character_body->set_velocity(_character_body->get_velocity() + (_character_body->get_gravity() * float(p_delta)));
+    }
+
+    Input *input = Input::get_singleton();
+
+    Vector2 input_vector = input->get_vector(move_left, move_right, move_forward, move_backward);
+    Vector3 direction = _character_body->get_transform().basis.xform(Vector3(input_vector.x, 0.0, input_vector.y));
+    direction.normalize();
+
+    if (! direction.is_zero_approx()) {
+        Vector3 velocity = direction * move_speed;
+        _character_body->set_velocity(velocity);
+    } else {
+        Vector3 velocity = _character_body->get_velocity().move_toward(Vector3(), move_speed);
+        _character_body->set_velocity(velocity);
+    }
+
+    _character_body->move_and_slide();
 }
 
 void CharacterBodyFirstPersonController3D::_try_set_character_body() {

@@ -13,7 +13,7 @@
 using namespace godot;
 
 class ComponentCollection : public Resource {
-    GDCLASS(ComponentCollection, Resource)
+    GDCLASS(ComponentCollection, Resource);
 
 public:
     Object *owner = nullptr;
@@ -81,4 +81,5 @@ protected:
     bool _set(const StringName &p_property, const Variant &p_value);
 
     bool _remove_component(StringName component_class);
+    void _update_processing(StringName component_class);
 };

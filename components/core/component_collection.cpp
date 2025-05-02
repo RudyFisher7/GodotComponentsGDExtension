@@ -130,6 +130,7 @@ void ComponentCollection::set_component(const Ref<Component> &value) {
 
     _components.insert(value->get_component_class(), value);
     value->owner = Object::cast_to<Object>(this);
+    value->connect("processing_changed", callable_mp(this, &ComponentCollection::_update_processing));
 
     if (value->is_process_overridden()) {
         (void)_process_group.insert(value);
@@ -366,12 +367,14 @@ bool ComponentCollection::_remove_component(StringName component_class) {
         return false;
     }
 
+
     bool result = false;
     Ref<Component> value = _components[component_class];
     if (value.is_valid()) {
         result = true;
         _components.erase(component_class);
         value->owner = nullptr;
+        value->disconnect("processing_changed", callable_mp(this, &ComponentCollection::_update_processing));
 
         (void)_process_group.erase(value);
         (void)_physics_process_group.erase(value);
@@ -390,4 +393,43 @@ bool ComponentCollection::_remove_component(StringName component_class) {
     }
 
     return result;
+}
+
+void ComponentCollection::_update_processing(StringName component_class) {
+    if (!_components.has(component_class)) {
+        return;
+    }
+
+    Ref<Component> value = _components[component_class];
+
+    (void)_process_group.erase(value);
+    (void)_physics_process_group.erase(value);
+    (void)_input_group.erase(value);
+    (void)_shortcut_input_group.erase(value);
+    (void)_unhandled_input_group.erase(value);
+    (void)_unhandled_key_input_group.erase(value);
+
+    if (value->is_process_overridden()) {
+        (void)_process_group.insert(value);
+    }
+
+    if (value->is_physics_process_overridden()) {
+        (void)_physics_process_group.insert(value);
+    }
+
+    if (value->is_input_overridden()) {
+        (void)_input_group.insert(value);
+    }
+
+    if (value->is_shortcut_input_overridden()) {
+        (void)_shortcut_input_group.insert(value);
+    }
+
+    if (value->is_unhandled_input_overridden()) {
+        (void)_unhandled_input_group.insert(value);
+    }
+
+    if (value->is_unhandled_key_input_overridden()) {
+        (void)_unhandled_key_input_group.insert(value);
+    }
 }

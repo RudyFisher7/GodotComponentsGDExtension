@@ -1,14 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://238gs5c0ya7i"]
 
 [sub_resource type="CharacterBodyFirstPersonController3D" id="CharacterBodyFirstPersonController3D_xxgfj"]
-character_body_path = NodePath(".")
-move_speed = 3.5
-mouse_sensitivity = Vector2(0.2, 0.1)
-move_left = &"ui_left"
-move_right = &"ui_right"
-move_forward = &"ui_up"
-move_backward = &"ui_down"
-toggle_mouse_captured = &"ui_cancel"
 
 [sub_resource type="ComponentCollection" id="ComponentCollection_c4cpm"]
 components/CharacterBodyFirstPersonController3D = SubResource("CharacterBodyFirstPersonController3D_xxgfj")
@@ -23,3 +15,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05348, 0)
 shape = SubResource("CapsuleShape3D_xxgfj")
 
 [node name="ComponentRuntimeManager" type="ComponentRuntimeManager" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65442, 0)

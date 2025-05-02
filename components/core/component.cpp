@@ -146,4 +146,6 @@ void Component::_bind_methods() {
     GDVIRTUAL_BIND(_shortcut_input, "event");
     GDVIRTUAL_BIND(_unhandled_input, "event");
     GDVIRTUAL_BIND(_unhandled_key_input, "event");
+
+    ADD_SIGNAL(MethodInfo("processing_changed", PropertyInfo(Variant::STRING_NAME, "emitter_class")));
 }
