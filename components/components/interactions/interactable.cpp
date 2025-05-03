@@ -3,3 +3,7 @@
 //
 
 #include "interactable.h"
+
+void Interactable::_bind_methods() {
+    ADD_SIGNAL(MethodInfo("component_erased", PropertyInfo(Variant::OBJECT, "emitter")));
+}

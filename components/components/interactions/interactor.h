@@ -5,8 +5,12 @@
 #pragma once
 
 #include "core/component.h"
+#include "core/component_collection.h"
 #include "components/interactions/interactable.h"
+#include "components/interactions/interactable_component.h"
 #include "components/interactions/interactor_component.h"
+#include "components/interactions/models/interaction_data.h"
+
 #include <godot_cpp/classes/camera3d.hpp>
 #include <godot_cpp/classes/character_body3d.hpp>
 #include <godot_cpp/classes/object.hpp>
@@ -37,12 +41,16 @@ protected:
     Area3D *_area3d;
     TypedArray<CollisionObject3D> _exceptions3d;
 
+    Object *_raycasted_object;
+
 public:
     Interactor();
 
     void ready() override;
     void physics_process(double p_delta) override;
     bool is_physics_process_overridden() const override;
+
+    bool start(const Ref<InteractionData> &data);
 
 protected:
     static void _bind_methods();
@@ -52,6 +60,11 @@ protected:
 
     void _on_body_entered(Node3D *body);
     void _on_body_exited(Node3D *body);
+    void _on_interactable_component_erased(Interactable *interactable);
+
+    void _add_interactable(Node *node);
+    void _erase_interactable(Node *node);
+    void _add_overlapping_interactables();
 
     void _try_set_ray_cast3d();
     void _try_set_area3d();

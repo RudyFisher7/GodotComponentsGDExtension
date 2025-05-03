@@ -1,5 +1,5 @@
 //
-// Created by rfish on 5/1/2025.
+// Created by rfish on 5/3/2025.
 //
 
 #pragma once
@@ -14,9 +14,7 @@
 #include <godot_cpp/variant/builtin_types.hpp>
 #include <godot_cpp/variant/variant.hpp>
 
-class Interactable : public Component {
-    GDCLASS(Interactable, Component);
+class InteractableComponent : public Component {
+    GDCLASS(InteractableComponent, Component);
 
-protected:
-    static void _bind_methods();
 };
