@@ -84,6 +84,7 @@ void Interactable::erase_component_at(int64_t index) {
 void Interactable::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_interactable_name"), &Interactable::get_interactable_name);
     ClassDB::bind_method(D_METHOD("set_interactable_name", "value"), &Interactable::set_interactable_name);
+    ClassDB::bind_method(D_METHOD("get_components"), &Interactable::get_components);
     ClassDB::bind_method(D_METHOD("add_component", "value"), &Interactable::add_component);
     ClassDB::bind_method(D_METHOD("erase_component", "value"), &Interactable::erase_component);
     ClassDB::bind_method(D_METHOD("erase_component_at", "index"), &Interactable::erase_component_at);

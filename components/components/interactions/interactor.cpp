@@ -19,6 +19,8 @@ Interactor::Interactor() :
 }
 
 void Interactor::ready() {
+    _try_set_exceptions3d();
+
     if (!ray_cast3d_path.is_empty()) {
         _try_set_ray_cast3d();
     }
@@ -27,7 +29,9 @@ void Interactor::ready() {
         _try_set_area3d();
     }
 
-    _try_set_exceptions3d();
+    if (_area3d) {
+        _add_overlapping_interactables();
+    }
 }
 
 void Interactor::physics_process(double p_delta) {
