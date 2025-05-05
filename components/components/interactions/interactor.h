@@ -28,13 +28,12 @@
 class Interactor : public Component {
     GDCLASS(Interactor, Component);
 
-public:
-    NodePath ray_cast3d_path;
-    NodePath area3d_path;
-    TypedArray<NodePath> collision_exception3d_paths;
-
 protected:
+    NodePath _ray_cast3d_path;
+    NodePath _area3d_path;
+    TypedArray<NodePath> _collision_exception3d_paths;
     TypedArray<InteractorComponent> _components;
+
     TypedArray<Interactable> _interactables;
 
     RayCast3D *_ray_cast3d;
@@ -49,6 +48,14 @@ public:
     void ready() override;
     void physics_process(double p_delta) override;
     bool is_physics_process_overridden() const override;
+    const NodePath &get_ray_cast3d_path() const;
+    void set_ray_cast3d_path(const NodePath &value);
+    const NodePath &get_area3d_path() const;
+    void set_area3d_path(const NodePath &value);
+    TypedArray<NodePath> get_collision_exception3d_paths() const;
+    void set_collision_exception3d_paths(const TypedArray<NodePath> &value);
+    TypedArray<InteractorComponent> get_components() const;
+    void set_components(const TypedArray<InteractorComponent> &value);
 
     bool start(const Ref<InteractionData> &data);
 
