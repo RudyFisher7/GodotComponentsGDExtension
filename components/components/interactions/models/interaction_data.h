@@ -5,8 +5,8 @@
 #pragma once
 
 #include "core/component.h"
-#include "components/interactions/interactable_component.h"
-#include "components/interactions/interactor_component.h"
+#include "components/interactions/components/interactable_component.h"
+#include "components/interactions/components/interactor_component.h"
 
 #include <godot_cpp/classes/camera3d.hpp>
 #include <godot_cpp/classes/character_body3d.hpp>

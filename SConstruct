@@ -10,6 +10,7 @@ sources.extend(Glob("components/core/*.cpp"))
 sources.extend(Glob("components/components/*.cpp"))
 sources.extend(Glob("components/components/interactions/*.cpp"))
 sources.extend(Glob("components/components/interactions/models/*.cpp"))
+sources.extend(Glob("components/components/interactions/models/components/*.cpp"))
 
 if env["target"] in ["editor", "template_debug"]:
     try:

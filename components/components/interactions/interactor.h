@@ -7,8 +7,8 @@
 #include "core/component.h"
 #include "core/component_collection.h"
 #include "components/interactions/interactable.h"
-#include "components/interactions/interactable_component.h"
-#include "components/interactions/interactor_component.h"
+#include "components/interactions/components/interactable_component.h"
+#include "components/interactions/components/interactor_component.h"
 #include "components/interactions/models/interaction_data.h"
 
 #include <godot_cpp/classes/camera3d.hpp>

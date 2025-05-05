@@ -5,7 +5,7 @@
 #pragma once
 
 #include "core/component.h"
-#include "components/interactions/interactable_component.h"
+#include "components/interactions/components/interactable_component.h"
 #include <godot_cpp/variant/typed_array.hpp>
 #include <godot_cpp/classes/area3d.hpp>
 #include <godot_cpp/classes/collision_object3d.hpp>
