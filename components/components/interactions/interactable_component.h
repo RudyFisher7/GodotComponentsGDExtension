@@ -17,4 +17,9 @@
 class InteractableComponent : public Component {
     GDCLASS(InteractableComponent, Component);
 
+public:
+    bool get_is_repreatable() const;
+
+protected:
+    static void _bind_methods();
 };
