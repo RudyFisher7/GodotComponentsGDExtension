@@ -5,6 +5,6 @@
 #include "interaction_data.h"
 
 InteractionData::InteractionData(
-        InteractorComponent *interactor_component,
-        InteractableComponent *interactable_component
+        Ref<InteractorComponent> interactor_component,
+        Ref<InteractableComponent> interactable_component
 ) : interactor_component(interactor_component), interactable_component(interactable_component) {}

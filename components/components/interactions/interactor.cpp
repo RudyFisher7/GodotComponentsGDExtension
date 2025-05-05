@@ -59,11 +59,11 @@ bool Interactor::is_physics_process_overridden() const {
 }
 
 bool Interactor::start(const Ref<InteractionData> &data) {
-    if (data.is_null() || data->interactable_component == nullptr || data->interactor_component == nullptr) {
+    if (data.is_null() || data->interactable_component.is_null() || data->interactor_component.is_null()) {
         return false;
     }
 
-    bool result = false;//todo:: start interactor component
+    bool result = data->interactor_component->start(data->interactable_component);
 
     return result;
 }
@@ -89,8 +89,15 @@ void Interactor::_on_body_exited(Node3D *body) {
     _erase_interactable(body);
 }
 
-void Interactor::_on_interactable_component_erased(Interactable *interactable) {
-    //
+void Interactor::_on_interactable_component_erased(Ref<Interactable> interactable) {
+    if (interactable->get_components().is_empty()) {
+        int64_t index = _interactables.find(interactable);
+        if (index > -1) {
+            _interactables.remove_at(index);
+            interactable->disconnect("component_erased", callable_mp(this, &Interactor::_on_interactable_component_erased));
+            emit_signal("interactable_exited", interactable);
+        }
+    }
 }
 
 void Interactor::_add_interactable(Node *node) {
@@ -106,7 +113,19 @@ void Interactor::_add_interactable(Node *node) {
 }
 
 void Interactor::_erase_interactable(Node *node) {
-    //
+    Ref<Component> component = ComponentCollection::object_get_component(node, "Interactable");
+
+    if (component.is_valid()) {
+        Ref<Interactable> interactable = Object::cast_to<Interactable>(*component);
+        if (interactable.is_valid()) {
+            int64_t index = _interactables.find(interactable);
+            if (index > -1) {
+                _interactables.remove_at(index);
+                interactable->disconnect("component_erased", callable_mp(this, &Interactor::_on_interactable_component_erased));
+                emit_signal("interactable_exited", interactable);
+            }
+        }
+    }
 }
 
 void Interactor::_add_overlapping_interactables() {

@@ -23,8 +23,8 @@ class InteractionData : public RefCounted {
     GDCLASS(InteractionData, RefCounted);
 
 public:
-    InteractorComponent *interactor_component;
-    InteractableComponent * interactable_component;
+    Ref<InteractorComponent> interactor_component;
+    Ref<InteractableComponent> interactable_component;
 
-    InteractionData(InteractorComponent *interactor_component, InteractableComponent *interactable_component);
+    InteractionData(Ref<InteractorComponent> interactor_component, Ref<InteractableComponent> interactable_component);
 };

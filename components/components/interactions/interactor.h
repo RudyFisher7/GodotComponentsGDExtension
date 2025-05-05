@@ -60,7 +60,7 @@ protected:
 
     void _on_body_entered(Node3D *body);
     void _on_body_exited(Node3D *body);
-    void _on_interactable_component_erased(Interactable *interactable);
+    void _on_interactable_component_erased(Ref<Interactable> interactable);
 
     void _add_interactable(Node *node);
     void _erase_interactable(Node *node);
