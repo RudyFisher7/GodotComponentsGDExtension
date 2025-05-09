@@ -16,7 +16,7 @@ class TestGDExtensionComponent : public Component {
     GDCLASS(TestGDExtensionComponent, Component);
 
 public:
-    void enter_tree() override;
+    void enter_tree(Node *p_parent) override;
     void ready() override;
 
 protected:

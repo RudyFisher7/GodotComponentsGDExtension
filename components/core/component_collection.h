@@ -1,6 +1,7 @@
 #pragma once
 
 #include "component.h"
+#include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/object.hpp>
 #include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/classes/resource.hpp>
@@ -12,12 +13,14 @@
 using namespace godot;
 
 class ComponentCollection : public Resource {
-    GDCLASS(ComponentCollection, Resource)
+    GDCLASS(ComponentCollection, Resource);
 
 public:
     Object *owner = nullptr;
 
 protected:
+    Node *_parent = nullptr;
+
 //    TypedDictionary<StringName, Component> _components;
     HashMap<StringName, Ref<Component>> _components;
     HashSet<Ref<Component>> _process_group;
@@ -36,7 +39,7 @@ public:
     static bool object_has_component(Object *obj, const StringName &component_class);
     static void object_set_component(Object *obj, const Ref<Component> &component);
     static void object_remove_component(Object *obj, const StringName &component_class);
-    static Ref<ComponentCollection> object_get_component(Object *obj, const StringName &component_class);
+    static Ref<Component> object_get_component(Object *obj, const StringName &component_class);
 
     ComponentCollection();
     virtual ~ComponentCollection();
@@ -60,7 +63,7 @@ public:
     bool is_processing_unhandled_input() const;
     bool is_processing_unhandled_key_input() const;
 
-    void call_components_enter_tree();
+    void call_components_enter_tree(Node *p_parent);
     void call_components_exit_tree();
     void call_components_ready();
     void call_components_process(double delta);
@@ -78,4 +81,5 @@ protected:
     bool _set(const StringName &p_property, const Variant &p_value);
 
     bool _remove_component(StringName component_class);
+    void _update_processing(StringName component_class);
 };

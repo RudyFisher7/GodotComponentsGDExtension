@@ -1,7 +1,22 @@
-[gd_scene load_steps=6 format=3 uid="uid://dmlguatuxv1mv"]
+[gd_scene load_steps=9 format=3 uid="uid://dmlguatuxv1mv"]
 
 [ext_resource type="Script" uid="uid://deab8iex6e2cf" path="res://addons/components/tests/test_gdscript_component.gd" id="1_8wm4y"]
 [ext_resource type="Script" uid="uid://m7papk6qwl2v" path="res://addons/components/tests/networking_test_1.gd" id="1_ce7ev"]
+
+[sub_resource type="Component" id="Component_c3ls0"]
+script = ExtResource("1_8wm4y")
+tmp_0 = 4
+tmp_name = "temp"
+metadata/_custom_type_script = "uid://deab8iex6e2cf"
+
+[sub_resource type="Component" id="Component_rbv3a"]
+script = ExtResource("1_8wm4y")
+tmp_0 = 0
+tmp_name = "temp"
+metadata/_custom_type_script = "uid://deab8iex6e2cf"
+
+[sub_resource type="ComponentCollection" id="ComponentCollection_f0iw7"]
+components/TestGDScriptComponent = SubResource("Component_rbv3a")
 
 [sub_resource type="Component" id="Component_ce7ev"]
 script = ExtResource("1_8wm4y")
@@ -13,10 +28,10 @@ metadata/_custom_type_script = "uid://deab8iex6e2cf"
 components/TestGDScriptComponent = SubResource("Component_ce7ev")
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ce7ev"]
-properties/0/path = NodePath("SpinBox:value")
+properties/0/path = NodePath("Label:text")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath("Label:text")
+properties/1/path = NodePath(".:metadata/components:components/TestGDScriptComponent:tmp_0")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
@@ -24,7 +39,9 @@ properties/1/replication_mode = 1
 offset_right = 306.0
 offset_bottom = 40.0
 script = ExtResource("1_ce7ev")
+tmp_resource = SubResource("Component_c3ls0")
 metadata/tmp_meta = ""
+metadata/components = SubResource("ComponentCollection_f0iw7")
 
 [node name="SpinBox" type="SpinBox" parent="."]
 layout_mode = 2
@@ -32,6 +49,10 @@ metadata/components = SubResource("ComponentCollection_c3ls0")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 2
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 2
+text = "<tmp_o here>"
 
 [node name="LineEdit" type="LineEdit" parent="."]
 layout_mode = 2
@@ -43,5 +64,6 @@ replication_config = SubResource("SceneReplicationConfig_ce7ev")
 [node name="Timer" type="Timer" parent="."]
 autostart = true
 
+[connection signal="value_changed" from="SpinBox" to="." method="_on_spin_box_value_changed"]
 [connection signal="text_changed" from="LineEdit" to="." method="_on_line_edit_text_changed"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

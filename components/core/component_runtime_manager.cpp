@@ -31,7 +31,7 @@ void ComponentRuntimeManager::_enter_tree() {
     if (_components.is_valid()) {
         _components->owner = this;
         _components->connect("changed", callable_mp(this, &ComponentRuntimeManager::_update_processing));
-        _components->call_components_enter_tree();
+        _components->call_components_enter_tree(get_parent());
     } else {
         WARN_PRINT(vformat("%s's parent Node has no components to manage.", get_name()));
 

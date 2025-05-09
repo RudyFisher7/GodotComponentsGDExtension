@@ -19,8 +19,9 @@ void ComponentCollection::set_components(Object *obj, const Ref<ComponentCollect
 
     ERR_FAIL_COND_MSG(engine == nullptr, "Engine singleton is null!?");
 
-    if (!engine->is_editor_hint() && components->is_runtime_managed()) {
-        components->call_components_enter_tree();
+    Node *node = Object::cast_to<Node>(obj);
+    if (!engine->is_editor_hint() && components->is_runtime_managed() && node != nullptr) {
+        components->call_components_enter_tree(node);
         components->call_components_ready();
     }
 }
@@ -69,7 +70,7 @@ void ComponentCollection::object_remove_component(Object *obj, const StringName 
     }
 }
 
-Ref<ComponentCollection> ComponentCollection::object_get_component(Object *obj, const StringName &component_class) {
+Ref<Component> ComponentCollection::object_get_component(Object *obj, const StringName &component_class) {
     Ref<ComponentCollection> collection = get_components(obj);
 
     if (collection.is_valid()) {
@@ -129,6 +130,7 @@ void ComponentCollection::set_component(const Ref<Component> &value) {
 
     _components.insert(value->get_component_class(), value);
     value->owner = Object::cast_to<Object>(this);
+    value->connect("processing_changed", callable_mp(this, &ComponentCollection::_update_processing));
 
     if (value->is_process_overridden()) {
         (void)_process_group.insert(value);
@@ -159,7 +161,7 @@ void ComponentCollection::set_component(const Ref<Component> &value) {
     ERR_FAIL_COND_MSG(engine == nullptr, "Engine singleton is null!?");
 
     if (!engine->is_editor_hint() && is_runtime_managed()) {
-        value->enter_tree();
+        value->enter_tree(_parent);
         value->ready();
     }
 
@@ -208,7 +210,8 @@ bool ComponentCollection::is_processing_unhandled_key_input() const {
     return !_unhandled_key_input_group.is_empty();
 }
 
-void ComponentCollection::call_components_enter_tree() {
+void ComponentCollection::call_components_enter_tree(Node *p_parent) {
+    _parent = p_parent;
 //    Array array = _components.values();
 //    for (int i = 0; i < array.size(); ++i) {
 //        Ref<Component> c = Object::cast_to<Component>(array[i]);
@@ -216,7 +219,7 @@ void ComponentCollection::call_components_enter_tree() {
 //    }
 
     for (const KeyValue<StringName, Ref<Component>> &K : _components) {
-        K.value->enter_tree();
+        K.value->enter_tree(p_parent);
     }
 }
 
@@ -230,6 +233,8 @@ void ComponentCollection::call_components_exit_tree() {
     for (const KeyValue<StringName, Ref<Component>> &K : _components) {
         K.value->exit_tree();
     }
+
+    _parent = nullptr;
 }
 
 void ComponentCollection::call_components_ready() {
@@ -362,12 +367,14 @@ bool ComponentCollection::_remove_component(StringName component_class) {
         return false;
     }
 
+
     bool result = false;
     Ref<Component> value = _components[component_class];
     if (value.is_valid()) {
         result = true;
         _components.erase(component_class);
         value->owner = nullptr;
+        value->disconnect("processing_changed", callable_mp(this, &ComponentCollection::_update_processing));
 
         (void)_process_group.erase(value);
         (void)_physics_process_group.erase(value);
@@ -386,4 +393,43 @@ bool ComponentCollection::_remove_component(StringName component_class) {
     }
 
     return result;
+}
+
+void ComponentCollection::_update_processing(StringName component_class) {
+    if (!_components.has(component_class)) {
+        return;
+    }
+
+    Ref<Component> value = _components[component_class];
+
+    (void)_process_group.erase(value);
+    (void)_physics_process_group.erase(value);
+    (void)_input_group.erase(value);
+    (void)_shortcut_input_group.erase(value);
+    (void)_unhandled_input_group.erase(value);
+    (void)_unhandled_key_input_group.erase(value);
+
+    if (value->is_process_overridden()) {
+        (void)_process_group.insert(value);
+    }
+
+    if (value->is_physics_process_overridden()) {
+        (void)_physics_process_group.insert(value);
+    }
+
+    if (value->is_input_overridden()) {
+        (void)_input_group.insert(value);
+    }
+
+    if (value->is_shortcut_input_overridden()) {
+        (void)_shortcut_input_group.insert(value);
+    }
+
+    if (value->is_unhandled_input_overridden()) {
+        (void)_unhandled_input_group.insert(value);
+    }
+
+    if (value->is_unhandled_key_input_overridden()) {
+        (void)_unhandled_key_input_group.insert(value);
+    }
 }
